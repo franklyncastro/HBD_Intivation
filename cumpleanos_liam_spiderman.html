@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  --red:#e31c1c;
+  --red-dark:#b01010;
+  --blue:#1a3a8f;
+  --blue-dark:#0f2460;
+  --yellow:#ffd700;
+  --white:#ffffff;
+  --offwhite:#fff8f0;
+}
+
+body{
+  font-family:'Nunito',sans-serif;
+  background:#0d1b3e;
+  overflow-x:hidden;
+}
+
+/* ══ INTRO ══ */
+#intro{
+  position:fixed;inset:0;
+  background:#0d1b3e;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  z-index:999;
+  transition:opacity 1.2s ease,transform 1.2s ease;
+  overflow:hidden;
+}
+#intro.out{opacity:0;transform:scale(1.05);pointer-events:none;}
+
+.city-skyline{
+  position:absolute;bottom:0;width:100%;height:220px;
+  display:flex;align-items:flex-end;gap:3px;
+  padding:0 10px;
+  opacity:0.25;
+}
+.building{
+  background:#1a2d5a;
+  border-radius:3px 3px 0 0;
+  flex-shrink:0;
+}
+
+.web-bg{
+  position:absolute;inset:0;
+  opacity:0.06;
+}
+
+.intro-spider{
+  font-size:90px;
+  animation:spider-drop 1s cubic-bezier(.34,1.56,.64,1) forwards,spider-float 3s 1s ease-in-out infinite;
+  transform:translateY(-200px);
+  filter:drop-shadow(0 0 30px rgba(227,28,28,0.7));
+  position:relative;z-index:2;
+}
+@keyframes spider-drop{
+  to{transform:translateY(0);}
+}
+@keyframes spider-float{
+  0%,100%{transform:translateY(0) rotate(-4deg);}
+  50%{transform:translateY(-16px) rotate(4deg);}
+}
+
+.intro-title{
+  font-family:'Bangers',cursive;
+  font-size:clamp(3rem,12vw,5.5rem);
+  color:var(--red);
+  letter-spacing:4px;
+  text-align:center;
+  margin-top:16px;
+  text-shadow:4px 4px 0 var(--blue-dark),-2px -2px 0 #000;
+  line-height:0.95;
+  position:relative;z-index:2;
+  animation:bang-in .6s .8s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes bang-in{
+  from{transform:scale(0.4) rotate(-5deg);opacity:0;}
+  to{transform:scale(1) rotate(0deg);opacity:1;}
+}
+.intro-sub{
+  color:var(--yellow);
+  font-size:0.95rem;
+  letter-spacing:3px;
+  margin-top:10px;
+  font-weight:700;
+  text-transform:uppercase;
+  position:relative;z-index:2;
+  animation:fadeUp .6s 1.2s both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+#open-btn{
+  margin-top:36px;
+  position:relative;z-index:2;
+  background:var(--red);
+  border:none;
+  color:#fff;
+  font-family:'Bangers',cursive;
+  font-size:1.6rem;
+  letter-spacing:3px;
+  padding:14px 48px;
+  border-radius:6px;
+  cursor:pointer;
+  box-shadow:4px 4px 0 var(--blue-dark);
+  transition:all .15s;
+  animation:fadeUp .6s 1.5s both;
+}
+#open-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--blue-dark);}
+#open-btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--blue-dark);}
+
+/* ══ WEB THREADS (decoración) ══ */
+.web-thread{
+  position:fixed;
+  pointer-events:none;
+  z-index:6;
+  opacity:0;
+  transition:opacity 1s;
+}
+.web-thread.show{opacity:1;}
+
+/* ══ FLOATIES ══ */
+#floaties{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden;}
+.floatie{position:absolute;animation:floatUp linear forwards;opacity:0;}
+@keyframes floatUp{
+  0%{opacity:0.9;transform:translateY(0) rotate(0deg);}
+  100%{opacity:0;transform:translateY(-110vh) rotate(540deg);}
+}
+
+/* ══ PAGE ══ */
+#page{opacity:0;transition:opacity 1s ease .3s;}
+#page.visible{opacity:1;}
+
+/* ══ HERO ══ */
+#hero{
+  background:linear-gradient(180deg,#0d1b3e 0%,#1a0a0a 60%,#0d1b3e 100%);
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:60px 24px 80px;
+  position:relative;
+  overflow:hidden;
+  text-align:center;
+}
+
+.hero-web-svg{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  opacity:0.07;pointer-events:none;
+}
+
+.hero-city{
+  position:absolute;bottom:0;width:100%;
+  display:flex;align-items:flex-end;gap:2px;
+  padding:0 8px;
+  opacity:0.2;
+}
+
+.hero-badge{
+  display:inline-block;
+  background:var(--red);
+  color:#fff;
+  font-family:'Bangers',cursive;
+  font-size:1.1rem;
+  letter-spacing:3px;
+  padding:6px 20px;
+  border-radius:4px;
+  margin-bottom:20px;
+  box-shadow:3px 3px 0 var(--blue-dark);
+  animation:fadeUp .7s .3s both;
+}
+
+.hero-spider-big{
+  font-size:clamp(80px,18vw,130px);
+  display:block;
+  animation:fadeUp .7s .1s both, hero-float 4s 1s ease-in-out infinite;
+  filter:drop-shadow(0 0 40px rgba(227,28,28,0.5));
+  position:relative;z-index:2;
+}
+@keyframes hero-float{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-14px);}
+}
+
+.hero-name{
+  font-family:'Bangers',cursive;
+  font-size:clamp(1.4rem,6vw,2.2rem);
+  color:var(--yellow);
+  letter-spacing:6px;
+  text-transform:uppercase;
+  animation:fadeUp .7s .4s both;
+  margin-bottom:6px;
+}
+
+.hero-title{
+  font-family:'Bangers',cursive;
+  font-size:clamp(3.5rem,14vw,7rem);
+  color:var(--white);
+  line-height:0.9;
+  text-shadow:5px 5px 0 var(--red-dark),-3px -3px 0 #000;
+  letter-spacing:2px;
+  animation:fadeUp .7s .5s both;
+}
+.hero-title span{color:var(--red);}
+
+.hero-age-ring{
+  margin:20px auto 0;
+  width:100px;height:100px;
+  border-radius:50%;
+  border:4px solid var(--red);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--blue-dark);
+  box-shadow:0 0 0 3px var(--yellow),0 0 30px rgba(227,28,28,0.4);
+  animation:fadeUp .7s .7s both,ring-pulse 2s 1.5s ease-in-out infinite;
+}
+@keyframes ring-pulse{
+  0%,100%{box-shadow:0 0 0 3px var(--yellow),0 0 20px rgba(227,28,28,0.3);}
+  50%{box-shadow:0 0 0 5px var(--yellow),0 0 40px rgba(227,28,28,0.6);}
+}
+.age-num{
+  font-family:'Bangers',cursive;
+  font-size:3rem;color:var(--yellow);
+  line-height:1;
+}
+.age-label{
+  font-size:0.65rem;color:rgba(255,255,255,0.7);
+  letter-spacing:2px;text-transform:uppercase;
+}
+
+.scroll-down{
+  position:absolute;bottom:24px;
+  color:rgba(255,255,255,0.4);
+  font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;
+  animation:bounce-d 2s 2s ease-in-out infinite;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+@keyframes bounce-d{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+
+/* ══ SCROLL REVEAL ══ */
+.sr{opacity:0;transform:translateY(36px);transition:opacity .9s ease,transform .9s ease;}
+.sr.in{opacity:1;transform:translateY(0);}
+.sr-l{opacity:0;transform:translateX(-36px);transition:opacity .9s ease,transform .9s ease;}
+.sr-l.in{opacity:1;transform:translateX(0);}
+.sr-r{opacity:0;transform:translateX(36px);transition:opacity .9s ease,transform .9s ease;}
+.sr-r.in{opacity:1;transform:translateX(0);}
+.sr-s{opacity:0;transform:scale(0.8);transition:opacity .9s ease,transform .9s ease;}
+.sr-s.in{opacity:1;transform:scale(1);}
+
+/* ══ DETAILS SECTION ══ */
+#details{
+  background:var(--offwhite);
+  padding:80px 24px;
+  display:flex;flex-direction:column;align-items:center;
+  gap:0;
+}
+
+.section-title{
+  font-family:'Bangers',cursive;
+  font-size:clamp(2.2rem,8vw,3.5rem);
+  color:var(--blue);
+  letter-spacing:3px;
+  text-align:center;
+  margin-bottom:8px;
+  text-shadow:3px 3px 0 rgba(0,0,0,0.1);
+}
+.section-title .accent{color:var(--red);}
+
+.detail-strip{
+  display:flex;gap:16px;flex-wrap:wrap;
+  justify-content:center;max-width:600px;
+  margin-top:28px;
+}
+.detail-card{
+  background:#fff;
+  border-radius:16px;
+  padding:22px 26px;
+  display:flex;flex-direction:column;
+  align-items:center;gap:8px;
+  min-width:130px;
+  flex:1;
+  border-top:4px solid var(--red);
+  box-shadow:0 4px 20px rgba(0,0,0,0.07);
+  transition:transform .3s;
+}
+.detail-card:hover{transform:translateY(-4px);}
+.dc-icon{font-size:32px;}
+.dc-val{
+  font-family:'Bangers',cursive;
+  font-size:1.6rem;
+  color:var(--blue);
+  letter-spacing:1px;
+  line-height:1.1;
+  text-align:center;
+}
+.dc-lbl{
+  font-size:0.72rem;
+  color:#888;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  text-align:center;
+}
+
+/* ══ WEB DIVIDER ══ */
+.web-divider{
+  width:100%;
+  background:linear-gradient(135deg,var(--blue-dark) 0%,var(--red-dark) 100%);
+  padding:28px 0;
+  display:flex;align-items:center;justify-content:center;
+  gap:12px;
+  overflow:hidden;
+  position:relative;
+}
+.wd-text{
+  font-family:'Bangers',cursive;
+  font-size:1.4rem;
+  color:rgba(255,255,255,0.25);
+  letter-spacing:6px;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+/* ══ AGENDA ══ */
+#agenda{
+  background:#0d1b3e;
+  padding:80px 24px;
+  display:flex;flex-direction:column;align-items:center;
+}
+
+.agenda-list{
+  display:flex;flex-direction:column;
+  gap:0;max-width:480px;width:100%;
+  margin-top:28px;
+  position:relative;
+}
+.agenda-list::before{
+  content:'';
+  position:absolute;left:28px;top:0;bottom:0;
+  width:2px;background:rgba(227,28,28,0.3);
+}
+.agenda-item{
+  display:flex;align-items:center;gap:16px;
+  padding:14px 0;
+  position:relative;
+}
+.ai-dot{
+  width:56px;height:56px;flex-shrink:0;
+  border-radius:50%;
+  background:var(--red-dark);
+  border:3px solid var(--red);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  position:relative;z-index:1;
+  transition:transform .3s;
+}
+.agenda-item:hover .ai-dot{transform:scale(1.15);}
+.ai-info{flex:1;}
+.ai-time{
+  font-family:'Bangers',cursive;
+  font-size:1.15rem;
+  color:var(--yellow);
+  letter-spacing:2px;
+}
+.ai-desc{
+  color:rgba(255,255,255,0.75);
+  font-size:0.9rem;
+  font-weight:600;
+  margin-top:2px;
+}
+
+/* ══ LOCATION ══ */
+#location{
+  background:var(--offwhite);
+  padding:80px 24px;
+  display:flex;flex-direction:column;align-items:center;
+}
+
+.loc-card{
+  background:#fff;
+  border-radius:20px;
+  overflow:hidden;
+  max-width:480px;width:100%;
+  box-shadow:0 8px 40px rgba(0,0,0,0.1);
+  border:2px solid var(--red);
+}
+
+.map-wrap{
+  width:100%;height:200px;
+  background:#d4dce8;
+  position:relative;
+  overflow:hidden;
+}
+.map-wrap svg{width:100%;height:100%;}
+
+.loc-body{
+  padding:24px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;gap:12px;
+}
+.loc-name{
+  font-family:'Bangers',cursive;
+  font-size:1.8rem;
+  color:var(--blue);
+  letter-spacing:2px;
+}
+.loc-addr{
+  color:#666;font-size:0.88rem;
+  line-height:1.6;
+}
+.map-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--red);
+  color:#fff;
+  text-decoration:none;
+  padding:12px 28px;
+  border-radius:8px;
+  font-weight:800;
+  font-size:0.88rem;
+  box-shadow:3px 3px 0 var(--red-dark);
+  transition:all .15s;
+  border:none;cursor:pointer;
+}
+.map-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--red-dark);}
+
+/* ══ DRESS / EXTRAS ══ */
+#extras{
+  background:#0d1b3e;
+  padding:80px 24px;
+  display:flex;flex-direction:column;align-items:center;
+  gap:0;
+}
+
+.extra-grid{
+  display:flex;gap:16px;flex-wrap:wrap;
+  justify-content:center;max-width:560px;
+  margin-top:28px;
+}
+.extra-card{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:16px;
+  padding:22px 20px;
+  text-align:center;
+  flex:1;min-width:130px;
+  transition:all .3s;
+}
+.extra-card:hover{background:rgba(255,255,255,0.09);transform:translateY(-4px);}
+.ec-icon{font-size:32px;display:block;margin-bottom:8px;}
+.ec-title{
+  font-family:'Bangers',cursive;
+  font-size:1.1rem;
+  color:var(--yellow);
+  letter-spacing:2px;
+  margin-bottom:4px;
+}
+.ec-desc{color:rgba(255,255,255,0.6);font-size:0.82rem;line-height:1.5;}
+
+/* ══ FOOTER ══ */
+#footer-sec{
+  background:linear-gradient(180deg,var(--red-dark) 0%,#0d1b3e 100%);
+  padding:70px 24px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.footer-spider{font-size:64px;display:block;margin-bottom:16px;}
+.footer-title{
+  font-family:'Bangers',cursive;
+  font-size:clamp(2rem,8vw,3.5rem);
+  color:#fff;
+  letter-spacing:3px;
+  text-shadow:3px 3px 0 rgba(0,0,0,0.4);
+}
+.footer-sub{
+  color:rgba(255,255,255,0.6);
+  font-size:0.85rem;
+  margin-top:10px;
+  font-weight:600;
+  letter-spacing:2px;
+}
+.footer-name{
+  font-family:'Bangers',cursive;
+  font-size:2.2rem;
+  color:var(--yellow);
+  letter-spacing:6px;
+  margin-top:18px;
+  text-shadow:3px 3px 0 rgba(0,0,0,0.4);
+}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div id="intro">
+  <svg class="web-bg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="#fff" stroke-width="0.8" fill="none">
+      <line x1="200" y1="0" x2="200" y2="400"/>
+      <line x1="0" y1="200" x2="400" y2="200"/>
+      <line x1="0" y1="0" x2="400" y2="400"/>
+      <line x1="400" y1="0" x2="0" y2="400"/>
+      <circle cx="200" cy="200" r="60"/><circle cx="200" cy="200" r="110"/>
+      <circle cx="200" cy="200" r="160"/><circle cx="200" cy="200" r="210"/>
+    </g>
+  </svg>
+  <div class="city-skyline" id="intro-city"></div>
+  <span class="intro-spider">🕷️</span>
+  <h1 class="intro-title">¡PARTY<br>TIME!</h1>
+  <p class="intro-sub">🎉 Tienes una invitación especial 🎉</p>
+  <button id="open-btn" onclick="openPage()">¡ABRIR INVITACIÓN!</button>
+</div>
+
+<!-- FLOATIES -->
+<div id="floaties"></div>
+
+<!-- PAGE -->
+<div id="page">
+
+  <!-- HERO -->
+  <section id="hero">
+    <svg class="hero-web-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+      <g stroke="#fff" stroke-width="0.6" fill="none">
+        <line x1="250" y1="0" x2="250" y2="500"/>
+        <line x1="0" y1="250" x2="500" y2="250"/>
+        <line x1="0" y1="0" x2="500" y2="500"/>
+        <line x1="500" y1="0" x2="0" y2="500"/>
+        <line x1="0" y1="125" x2="500" y2="375"/>
+        <line x1="500" y1="125" x2="0" y2="375"/>
+        <circle cx="250" cy="250" r="80"/><circle cx="250" cy="250" r="150"/>
+        <circle cx="250" cy="250" r="220"/><circle cx="250" cy="250" r="290"/>
+      </g>
+    </svg>
+    <div class="hero-city" id="hero-city"></div>
+    <div class="hero-badge">🕸️ MARVEL SUPERHERO PARTY 🕸️</div>
+    <span class="hero-spider-big">🕷️</span>
+    <p class="hero-name">¡Liam cumple</p>
+    <h1 class="hero-title"><span>5</span><br>AÑOS!</h1>
+    <div class="hero-age-ring">
+      <span class="age-num">5</span>
+      <span class="age-label">años</span>
+    </div>
+    <div class="scroll-down">
+      <span>↓</span>
+      <span>Ver invitación</span>
+    </div>
+  </section>
+
+  <!-- DETAILS -->
+  <section id="details">
+    <div class="section-title sr"><span class="accent">★</span> DETALLES <span class="accent">★</span></div>
+    <div class="detail-strip">
+      <div class="detail-card sr" style="transition-delay:.05s">
+        <span class="dc-icon">📅</span>
+        <span class="dc-val">Martes<br>23 de Feb</span>
+        <span class="dc-lbl">Fecha</span>
+      </div>
+      <div class="detail-card sr" style="transition-delay:.15s">
+        <span class="dc-icon">🕒</span>
+        <span class="dc-val">3:00 PM</span>
+        <span class="dc-lbl">Hora</span>
+      </div>
+      <div class="detail-card sr" style="transition-delay:.25s">
+        <span class="dc-icon">🎂</span>
+        <span class="dc-val">2027</span>
+        <span class="dc-lbl">Año</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEB DIVIDER -->
+  <div class="web-divider sr">
+    <span class="wd-text">🕷 WITH GREAT POWER COMES GREAT RESPONSIBILITY 🕷</span>
+  </div>
+
+  <!-- AGENDA -->
+  <section id="agenda">
+    <div class="section-title sr" style="color:#fff"><span class="accent">🕸️</span> PLAN DEL DÍA <span class="accent">🕸️</span></div>
+    <div class="agenda-list">
+      <div class="agenda-item sr" style="transition-delay:.05s">
+        <div class="ai-dot">🎈</div>
+        <div class="ai-info">
+          <div class="ai-time">3:00 PM</div>
+          <div class="ai-desc">Llegada de superhéroes y bienvenida</div>
+        </div>
+      </div>
+      <div class="agenda-item sr" style="transition-delay:.15s">
+        <div class="ai-dot">🎮</div>
+        <div class="ai-info">
+          <div class="ai-time">3:30 PM</div>
+          <div class="ai-desc">Juegos y misiones Spiderman</div>
+        </div>
+      </div>
+      <div class="agenda-item sr" style="transition-delay:.25s">
+        <div class="ai-dot">🍕</div>
+        <div class="ai-info">
+          <div class="ai-time">4:30 PM</div>
+          <div class="ai-desc">Pizza, snacks y hora de comer</div>
+        </div>
+      </div>
+      <div class="agenda-item sr" style="transition-delay:.35s">
+        <div class="ai-dot">🎂</div>
+        <div class="ai-info">
+          <div class="ai-time">5:30 PM</div>
+          <div class="ai-desc">¡Pastel y el cumpleaños feliz!</div>
+        </div>
+      </div>
+      <div class="agenda-item sr" style="transition-delay:.45s">
+        <div class="ai-dot">🎁</div>
+        <div class="ai-info">
+          <div class="ai-time">6:00 PM</div>
+          <div class="ai-desc">Piñata, regalos y recuerdos</div>
+        </div>
+      </div>
+      <div class="agenda-item sr" style="transition-delay:.55s">
+        <div class="ai-dot">🕷️</div>
+        <div class="ai-info">
+          <div class="ai-time">7:00 PM</div>
+          <div class="ai-desc">Cierre y bolsitas sorpresa 🎉</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEB DIVIDER 2 -->
+  <div class="web-divider sr">
+    <span class="wd-text">🎉 LIAM'S BIRTHDAY BASH • SPIDERMAN EDITION 🎉</span>
+  </div>
+
+  <!-- LOCATION -->
+  <section id="location">
+    <div class="section-title sr"><span class="accent">📍</span> ¿DÓNDE? <span class="accent">📍</span></div>
+    <div class="loc-card sr" style="margin-top:24px;">
+      <!-- Mapa SVG decorativo -->
+      <div class="map-wrap">
+        <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg">
+          <rect width="480" height="200" fill="#dce8f0"/>
+          <!-- Calles principales -->
+          <rect x="0" y="88" width="480" height="22" fill="#fff" opacity="0.85"/>
+          <rect x="190" y="0" width="22" height="200" fill="#fff" opacity="0.85"/>
+          <!-- Calles secundarias -->
+          <rect x="0" y="148" width="480" height="12" fill="#fff" opacity="0.55"/>
+          <rect x="0" y="38" width="480" height="12" fill="#fff" opacity="0.55"/>
+          <rect x="90" y="0" width="12" height="200" fill="#fff" opacity="0.55"/>
+          <rect x="310" y="0" width="12" height="200" fill="#fff" opacity="0.55"/>
+          <rect x="390" y="0" width="12" height="200" fill="#fff" opacity="0.4"/>
+          <!-- Bloques -->
+          <rect x="10" y="55" width="74" height="28" rx="4" fill="#c8d8e8" opacity="0.7"/>
+          <rect x="10" y="105" width="74" height="38" rx="4" fill="#c8d8e8" opacity="0.7"/>
+          <rect x="108" y="55" width="76" height="28" rx="4" fill="#c8d8e8" opacity="0.7"/>
+          <rect x="108" y="105" width="76" height="38" rx="4" fill="#c8d8e8" opacity="0.7"/>
+          <rect x="218" y="10" width="86" height="22" rx="4" fill="#c8d8e8" opacity="0.7"/>
+          <rect x="218" y="55" width="86" height="28" rx="4" fill="#c8d8e8" opacity="0.7"/>
+          <rect x="218" y="105" width="86" height="38" rx="4" fill="#c8d8e8" opacity="0.7"/>
+          <rect x="218" y="162" width="86" height="28" rx="4" fill="#c8d8e8" opacity="0.7"/>
+          <rect x="328" y="10" width="56" height="22" rx="4" fill="#c8d8e8" opacity="0.6"/>
+          <rect x="328" y="55" width="56" height="28" rx="4" fill="#c8d8e8" opacity="0.6"/>
+          <rect x="328" y="105" width="56" height="38" rx="4" fill="#c8d8e8" opacity="0.6"/>
+          <rect x="406" y="10" width="64" height="22" rx="4" fill="#c8d8e8" opacity="0.5"/>
+          <rect x="406" y="55" width="64" height="28" rx="4" fill="#c8d8e8" opacity="0.5"/>
+          <rect x="406" y="105" width="64" height="38" rx="4" fill="#c8d8e8" opacity="0.5"/>
+          <rect x="10" y="162" width="74" height="28" rx="4" fill="#c8d8e8" opacity="0.7"/>
+          <rect x="108" y="162" width="76" height="28" rx="4" fill="#c8d8e8" opacity="0.7"/>
+          <!-- Parque/zona verde -->
+          <rect x="108" y="10" width="76" height="22" rx="6" fill="#b8d8a8" opacity="0.7"/>
+          <!-- Pin Spiderman -->
+          <circle cx="240" cy="99" r="22" fill="#e31c1c" opacity="0.95"/>
+          <circle cx="240" cy="99" r="13" fill="#fff"/>
+          <text x="240" y="104" font-size="14" text-anchor="middle" font-family="sans-serif">🕷️</text>
+          <circle cx="240" cy="99" r="30" fill="none" stroke="#e31c1c" stroke-width="2" opacity="0.4"/>
+          <circle cx="240" cy="99" r="42" fill="none" stroke="#e31c1c" stroke-width="1" opacity="0.2"/>
+          <!-- Hilo de pin -->
+          <line x1="240" y1="121" x2="240" y2="135" stroke="#e31c1c" stroke-width="2"/>
+          <circle cx="240" cy="137" r="3" fill="#e31c1c"/>
+        </svg>
+      </div>
+      <div class="loc-body">
+        <p class="loc-name">🎉 Salón Aventura Kids</p>
+        <p class="loc-addr">Av. Los Héroes #24, Ensanche Naco<br>Santo Domingo, República Dominicana</p>
+        <a class="map-btn" href="https://maps.google.com/?q=Salon+Aventura+Kids+Santo+Domingo" target="_blank" rel="noopener">
+          🗺️ &nbsp; Cómo llegar — Google Maps
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXTRAS -->
+  <section id="extras">
+    <div class="section-title sr" style="color:#fff"><span class="accent">🕸️</span> INFO EXTRA <span class="accent">🕸️</span></div>
+    <div class="extra-grid">
+      <div class="extra-card sr" style="transition-delay:.05s">
+        <span class="ec-icon">🦸</span>
+        <div class="ec-title">Dress Code</div>
+        <div class="ec-desc">¡Ven vestido de tu superhéroe favorito!</div>
+      </div>
+      <div class="extra-card sr" style="transition-delay:.15s">
+        <span class="ec-icon">🎁</span>
+        <div class="ec-title">Regalos</div>
+        <div class="ec-desc">Tu presencia es el mejor regalo — lo demás es bonus 💙</div>
+      </div>
+      <div class="extra-card sr" style="transition-delay:.25s">
+        <span class="ec-icon">📸</span>
+        <div class="ec-title">Foto Booth</div>
+        <div class="ec-desc">Habrá corner temático para fotos de recuerdo</div>
+      </div>
+      <div class="extra-card sr" style="transition-delay:.35s">
+        <span class="ec-icon">🅿️</span>
+        <div class="ec-title">Parking</div>
+        <div class="ec-desc">Estacionamiento disponible frente al salón</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <section id="footer-sec">
+    <span class="footer-spider sr">🕷️</span>
+    <h2 class="footer-title sr">¡TE ESPERAMOS,<br>SUPERHÉROE!</h2>
+    <div class="footer-name sr">LIAM ★ 5 AÑOS</div>
+    <p class="footer-sub sr" style="margin-top:16px;">Martes 23 de Febrero, 2027 · 3:00 PM</p>
+    <p class="footer-sub sr" style="margin-top:8px;">🕸️ With great power comes great parties 🕸️</p>
+  </section>
+
+</div>
+
+<script>
+/* ── CITY BUILDER ── */
+function buildCity(id,count,maxH,color){
+  const c=document.getElementById(id);
+  if(!c)return;
+  const widths=[18,24,30,20,26,16,28,22,32,18,24,20];
+  for(let i=0;i<count;i++){
+    const b=document.createElement('div');
+    b.className='building';
+    const h=30+Math.random()*maxH;
+    const w=widths[i%widths.length];
+    b.style.cssText=`width:${w}px;height:${h}px;background:${color};`;
+    c.appendChild(b);
+  }
+}
+buildCity('intro-city',28,160,'#1a2d5a');
+buildCity('hero-city',30,140,'#0f1e3a');
+
+/* ── OPEN PAGE ── */
+function openPage(){
+  document.getElementById('intro').classList.add('out');
+  setTimeout(()=>{
+    document.getElementById('intro').style.display='none';
+    document.getElementById('page').classList.add('visible');
+    startFloaties();
+  },1200);
+}
+
+/* ── FLOATIES ── */
+function startFloaties(){
+  const syms=['🕷️','🕸️','⭐','✨','🎉','🎈','🎊','💥','🦸'];
+  const fc=document.getElementById('floaties');
+  setInterval(()=>{
+    const p=document.createElement('span');
+    p.className='floatie';
+    p.textContent=syms[Math.floor(Math.random()*syms.length)];
+    const dur=6+Math.random()*6;
+    p.style.cssText=`left:${Math.random()*100}vw;bottom:0;font-size:${14+Math.random()*14}px;animation-duration:${dur}s`;
+    fc.appendChild(p);
+    setTimeout(()=>p.remove(),dur*1000+300);
+  },800);
+}
+
+/* ── SCROLL REVEAL ── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
+},{threshold:0.12});
+document.querySelectorAll('.sr,.sr-l,.sr-r,.sr-s').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
